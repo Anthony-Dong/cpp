@@ -28,7 +28,7 @@ function(cc_library)
     file (RELATIVE_PATH _RULE_SUBDIR ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_LIST_DIR})
 
     message ("# pwd: ${CMAKE_CURRENT_LIST_DIR}
-#root: ${CMAKE_SOURCE_DIR}
+# root: ${CMAKE_SOURCE_DIR}
 cc_library(
     name: ${_RULE_NAME},
     alias: ${_RULE_ALIAS},

@@ -20,17 +20,17 @@ init:
 		-DCMAKE_C_COMPILER="$(CC)" \
 		-DCMAKE_CXX_COMPILER="$(CXX)" \
 		-DCMAKE_C_FLAGS="$(C_FLAGS)" \
- 		-DCMAKE_CXX_FLAGS="$(CXX_FLAGS)" \
- 		-DCMAKE_CXX_STANDARD="17" \
- 		-DABSL_PROPAGATE_CXX_STD=ON \
+		-DCMAKE_CXX_FLAGS="$(CXX_FLAGS)" \
+		-DCMAKE_CXX_STANDARD="$(CXX_STANDARD)" \
+		-DABSL_PROPAGATE_CXX_STD=ON \
 		-S . \
 		-B output
 
 build:
-	cmake --build "$(BUILD_DIRECTORY)" --config "$(BUILD_TYPE)" -j4
+	cmake --build "$(BUILD_DIRECTORY)" --config "$(BUILD_TYPE)" -j8
 
 test:
-	cd "$(BUILD_DIRECTORY)" && ctest --config "$(BUILD_TYPE)" --tests-regex "^cpp_"  --rerun-failed --output-on-failure
+	cd "$(BUILD_DIRECTORY)" && ctest --config "$(BUILD_TYPE)" --tests-regex '_test' -j8
 
 clean:
 	rm -rf "$(BUILD_DIRECTORY)"
