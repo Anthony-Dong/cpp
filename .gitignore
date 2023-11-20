@@ -1,0 +1,7 @@
+/cmake-build-debug-gcc_11
+/output
+/cmake-*
+/.cache
+/build
+/.idea
+.DS_Store

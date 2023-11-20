@@ -1,0 +1,32 @@
+{
+  "editor.formatOnSave": true,
+  "[cpp]": {
+    "editor.defaultFormatter": "xaver.clang-format"
+  },
+  "[c]": {
+    "editor.defaultFormatter": "xaver.clang-format" // https://github.com/xaverh/vscode-clang-format
+  },
+  // clangd config: https://github.com/clangd/vscode-clangd
+  // "clangd.path": "/usr/bin/clangd",
+  "clangd.arguments": [
+    "--all-scopes-completion",
+    "--completion-style=bundled",
+    "--cross-file-rename",
+    "--background-index",
+    "--clang-tidy", // enable clang-tidy
+    "-j=4", // workers num: 4
+    "--pch-storage=disk", // Storing PCHs in memory increases memory usages, but may improve performance
+    "--compile-commands-dir=output"
+  ],
+  // https://github.com/microsoft/vscode-cmake-tools/blob/main/docs/cmake-settings.md
+  "cmake.buildArgs": [],
+  "cmake.configureArgs": [
+    "-DCMAKE_EXPORT_COMPILE_COMMANDS=1", // enable export clangd compile_commands.json
+    "-DCMAKE_BUILD_TYPE=Debug", // debug
+    "-DABSL_PROPAGATE_CXX_STD=ON",
+    "-DCMAKE_C_COMPILER=clang", // cc
+    "-DCMAKE_CXX_COMPILER=clang++" // cxx
+  ],
+  "cmake.generator": "Unix Makefiles",
+  "cmake.buildDirectory": "${workspaceFolder}/output",
+}
