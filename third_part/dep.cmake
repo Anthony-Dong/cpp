@@ -1,11 +1,30 @@
-add_subdirectory ("${CMAKE_CURRENT_SOURCE_DIR}/third_part/libevent-2.1.12-stable")
-#add_subdirectory ("${CMAKE_CURRENT_SOURCE_DIR}/third_part/fmt-10.1.1")
+#find_package(libevent)
+#if(libevent_FOUND)
+#    message(STATUS "libevent found")
+#else()
+#    message(FATAL_ERROR "libevent not found")
+#endif()
 
 include (FetchContent)
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
     cmake_policy (SET CMP0135 NEW)
 endif ()
+
+# mac下使用 find_package 有点问题
+if (APPLE)
+    set (FETCHCONTENT_TRY_FIND_PACKAGE_MODE NEVER)
+    set (EVENT__FORCE_KQUEUE_CHECK ON)
+endif ()
+
+set (EVENT__DISABLE_SAMPLES TRUE CACHE BOOL "" FORCE)
+set (EVENT__DISABLE_TESTS TRUE CACHE BOOL "" FORCE)
+set (EVENT__DISABLE_BENCHMARK TRUE CACHE BOOL "" FORCE)
+FetchContent_Declare (
+        libevent
+        GIT_REPOSITORY https://github.com/libevent/libevent.git
+        GIT_TAG release-2.1.12-stable
+)
 
 FetchContent_Declare (
         googletest
@@ -18,28 +37,19 @@ FetchContent_Declare (
         URL https://github.com/gabime/spdlog/archive/refs/tags/v1.12.0.tar.gz
 )
 
-#FetchContent_Declare(
-#        libevent
-#        URL https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz
-#)
-
-#FetchContent_Declare (
-#        absl
-#        GIT_REPOSITORY https://github.com/abseil/abseil-cpp.git
-#        GIT_TAG 20230802.0
-#)
-
+set (ABSL_PROPAGATE_CXX_STD ON)
 FetchContent_Declare (
         absl
         URL https://github.com/abseil/abseil-cpp/archive/refs/tags/20230802.0.tar.gz
 )
 
+add_definitions (-DFMT_HEADER_ONLY)
 FetchContent_Declare (
         fmt
         URL https://github.com/fmtlib/fmt/archive/refs/tags/10.1.1.tar.gz
 )
 
-FetchContent_MakeAvailable (googletest spdlog absl fmt)
+FetchContent_MakeAvailable (googletest spdlog absl fmt libevent)
 
 set (absl_LIBRARIES
         absl::algorithm

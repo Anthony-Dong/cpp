@@ -10,20 +10,25 @@ function(cc_binary)
             _RULE
             ""
             "NAME"
-            "SRCS;COPTS;LINKOPTS;DEPS;TAGS"
+            "SRCS;COPTS;LINKOPTS;DEPS;TAGS;INCLUDE_DIRS"
             ${ARGN}
     )
 
-    if (NOT DEFINED CPP_COMMON_INCLUDE_DIRS)
-        list (APPEND CPP_COMMON_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}) # 项目根路径
+    if (DEFINED _RULE_INCLUDE_DIRS)
+        # todo
+    elseif (DEFINED CPP_COMMON_INCLUDE_DIRS)
+        list (APPEND _RULE_INCLUDE_DIRS ${CPP_COMMON_INCLUDE_DIRS}) # 业务自定义的
+    else ()
+        list (APPEND _RULE_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}) # 项目根路径
     endif ()
+
     message ("# pwd: ${CMAKE_CURRENT_LIST_DIR}
 # root: ${CMAKE_SOURCE_DIR}
 cc_binary(
     name: ${_RULE_NAME},
     srcs: ${_RULE_SRCS},
     deps: ${_RULE_DEPS},
-    includes: ${CPP_COMMON_INCLUDE_DIRS},
+    includes: ${_RULE_INCLUDE_DIRS},
     )")
     add_executable (${_RULE_NAME} "")
     target_sources (${_RULE_NAME}
@@ -33,7 +38,7 @@ cc_binary(
     set_target_properties (${_RULE_NAME} PROPERTIES OUTPUT_NAME "${_RULE_NAME}")
     target_include_directories (${_RULE_NAME}
             PUBLIC
-            "$<BUILD_INTERFACE:${CPP_COMMON_INCLUDE_DIRS}>" # CMAKE_SOURCE_DIR
+            "$<BUILD_INTERFACE:${_RULE_INCLUDE_DIRS}>" # CMAKE_SOURCE_DIR
             "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
     )
     target_compile_options (${_RULE_NAME}

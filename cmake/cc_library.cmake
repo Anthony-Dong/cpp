@@ -10,7 +10,7 @@ function(cc_library)
             _RULE
             "TESTONLY"
             "NAME;ALIAS"
-            "HDRS;SRCS;COPTS;DEFINES;LINKOPTS;DEPS"
+            "HDRS;SRCS;COPTS;DEFINES;LINKOPTS;DEPS;INCLUDE_DIRS"
             ${ARGN}
     )
 
@@ -21,8 +21,12 @@ function(cc_library)
         set (_RULE_IS_INTERFACE 0)
     endif ()
 
-    if (NOT DEFINED CPP_COMMON_INCLUDE_DIRS)
-        list (APPEND CPP_COMMON_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}) # 项目根路径
+    if (DEFINED _RULE_INCLUDE_DIRS)
+        # todo
+    elseif (DEFINED CPP_COMMON_INCLUDE_DIRS)
+        list (APPEND _RULE_INCLUDE_DIRS ${CPP_COMMON_INCLUDE_DIRS}) # 业务自定义的
+    else ()
+        list (APPEND _RULE_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}) # 项目根路径
     endif ()
 
     file (RELATIVE_PATH _RULE_SUBDIR ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_LIST_DIR})
@@ -35,7 +39,7 @@ cc_library(
     srcs: ${_RULE_SRCS},
     hdrs: ${_RULE_HDRS},
     deps: ${_RULE_DEPS},
-    includes: ${CPP_COMMON_INCLUDE_DIRS},
+    includes: ${_RULE_INCLUDE_DIRS},
     )")
 
     if (_RULE_IS_INTERFACE)
@@ -44,7 +48,7 @@ cc_library(
         set_target_properties (${_RULE_NAME} PROPERTIES PUBLIC_HEADER "${_RULE_HDRS}")
         target_include_directories (${_RULE_NAME}
                 INTERFACE
-                "$<BUILD_INTERFACE:${CPP_COMMON_INCLUDE_DIRS}>" # 指定include路径
+                "$<BUILD_INTERFACE:${_RULE_INCLUDE_DIRS}>" # 指定include路径
                 "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>" # 指定install路径
         )
         target_link_libraries (${_RULE_NAME}

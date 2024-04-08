@@ -1,7 +1,6 @@
-#include "cpp/utils/time.h"
-#include <iostream>
+#include "spdlog/spdlog.h"
 
 int main() {
-    std::cout << cpp::utils::FormatCurrentTime() << std::endl;
-    std::cout << "hello world" << std::endl;
+    spdlog::info("hello {}", "cmake");
+    SPDLOG_INFO("hello {}", "cmake");
 }

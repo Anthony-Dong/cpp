@@ -1,13 +1,13 @@
 cc_test (
         NAME log_test
-        SRCS log/logger_test.cpp
+        SRCS log/cpp20_logger_test.cpp
         DEPS cpp::log
 )
 
 cc_test (
         NAME utils_time_test
         SRCS utils/time_test.cpp
-        DEPS cpp::utils
+        DEPS cpp::utils fmt
 )
 
 cc_binary (

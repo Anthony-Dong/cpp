@@ -16,7 +16,8 @@
     "--clang-tidy", // enable clang-tidy
     "-j=4", // workers num: 4
     "--pch-storage=disk", // Storing PCHs in memory increases memory usages, but may improve performance
-    "--compile-commands-dir=output"
+    "--compile-commands-dir=output",
+    "--pretty"
   ],
   // https://github.com/microsoft/vscode-cmake-tools/blob/main/docs/cmake-settings.md
   "cmake.buildArgs": [],

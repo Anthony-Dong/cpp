@@ -11,6 +11,71 @@ foreach (main_file IN LISTS main_files)
     cc_binary (
             NAME "${PROJECT_NAME}_${filedir}_${filename}"
             SRCS "${main_file}"
-            DEPS ${THIRD_PART_LIB}
+            DEPS ${THIRD_PART_LIB} cpp::utils
     )
 endforeach ()
+
+file (
+        GLOB_RECURSE test_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/*/*_test.cpp"
+)
+
+foreach (test_file IN LISTS test_files)
+    get_filename_component (filename ${test_file} NAME_WE)
+    get_filename_component (filedir ${test_file} DIRECTORY)
+    cc_test (
+            NAME "${PROJECT_NAME}_${filedir}_${filename}"
+            SRCS "${test_file}"
+            DEPS spdlog absl::time
+    )
+endforeach ()
+
+# asio
+if (DEFINED CMAKE_CXX_STANDARD AND CMAKE_CXX_STANDARD GREATER_EQUAL 20)
+    message ("build asio files")
+    file (
+            GLOB_RECURSE asio_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/*/*_asio.cpp"
+    )
+    foreach (asio_file IN LISTS asio_files)
+        get_filename_component (filename ${asio_file} NAME_WE)
+        get_filename_component (filedir ${asio_file} DIRECTORY)
+        cc_binary (
+                NAME "${PROJECT_NAME}_${filedir}_${filename}"
+                SRCS "${asio_file}"
+                DEPS asio absl::time spdlog
+        )
+    endforeach ()
+
+    file (
+            GLOB_RECURSE asio_test_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/*/*_testasio.cpp"
+    )
+    foreach (asio_file IN LISTS asio_test_files)
+        get_filename_component (filename ${asio_file} NAME_WE)
+        get_filename_component (filedir ${asio_file} DIRECTORY)
+        cc_test (
+                NAME "${PROJECT_NAME}_${filedir}_${filename}"
+                SRCS "${asio_file}"
+                DEPS asio absl::time spdlog
+        )
+    endforeach ()
+endif ()
+
+# cpp20
+if (DEFINED CMAKE_CXX_STANDARD AND CMAKE_CXX_STANDARD GREATER_EQUAL 20)
+    message ("build cpp20 files")
+    file (
+            GLOB_RECURSE cpp20_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/*/*_cpp20.cpp"
+    )
+    foreach (cpp20_file IN LISTS cpp20_files)
+        get_filename_component (filename ${cpp20_file} NAME_WE)
+        get_filename_component (filedir ${cpp20_file} DIRECTORY)
+        cc_binary (
+                NAME "${PROJECT_NAME}_${filedir}_${filename}"
+                SRCS "${cpp20_file}"
+                DEPS absl::time spdlog
+        )
+    endforeach ()
+endif ()

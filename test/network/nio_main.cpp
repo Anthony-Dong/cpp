@@ -1,21 +1,21 @@
-#include "cpp/network/listener.h"
-#include "cpp/network/utils.h"
-#include <event2/event.h>
-#include <unistd.h>
-#include <vector>
-#include <string>
-#include <event2/bufferevent.h>
-#include <event2/buffer.h>
-#include "cpp/network/task_queue.h"
 #include "cpp/log/logger.h"
+#include "cpp/network/listener.h"
+#include "cpp/network/task_queue.h"
+#include "cpp/network/utils.h"
+#include "event2/buffer.h"
+#include "event2/bufferevent.h"
+#include "event2/event.h"
+#include <iostream>
+#include <string>
+#include <unistd.h>
 
 using namespace cpp::network;
 
-void on_read(bufferevent *bev, void *ctx);
-void on_event(bufferevent *bev, short what, void *ctx);
+void on_read(bufferevent* bev, void* ctx);
+void on_event(bufferevent* bev, short what, void* ctx);
 
 struct Connection {
-    explicit Connection(event_base *base, evutil_socket_t fd, sockaddr_in addr) : base_(base), fd_(fd), addr_(addr) {
+    explicit Connection(event_base* base, evutil_socket_t fd, sockaddr_in addr) : base_(base), fd_(fd), addr_(addr) {
         // BEV_OPT_CLOSE_ON_FREE: 表示当free的时候会close掉socket
         bufferevent_ = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
         assert(bufferevent_ != nullptr);
@@ -41,20 +41,20 @@ public:
     }
 
 private:
-    friend void on_event(bufferevent *bev, short what, void *ctx);
+    friend void on_event(bufferevent* bev, short what, void* ctx);
 
-    friend void on_read(bufferevent *bev, void *ctx);
+    friend void on_read(bufferevent* bev, void* ctx);
 
 private:
-    event_base *base_;
-    bufferevent *bufferevent_{};
+    event_base* base_;
+    bufferevent* bufferevent_{};
 
     evutil_socket_t fd_;
     sockaddr_in addr_;
 };
 
-void on_read(bufferevent *bev, void *ctx) {
-    auto conn = (Connection *)ctx;
+void on_read(bufferevent* bev, void* ctx) {
+    auto conn = (Connection*)ctx;
     //        auto client = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
     auto buff = bufferevent_socket_new(conn->base_, -1, BEV_OPT_CLOSE_ON_FREE);
     bufferevent_setcb(buff, on_read, nullptr, on_event, conn);
@@ -65,7 +65,7 @@ void on_read(bufferevent *bev, void *ctx) {
     addr.sin_addr.s_addr = inet_addr("127.0.0.1");
     using namespace std::chrono;
     auto start = system_clock::now();
-    if (auto status = bufferevent_socket_connect(buff, (sockaddr *)&addr, sizeof(addr)); status == -1) {
+    if (auto status = bufferevent_socket_connect(buff, (sockaddr*)&addr, sizeof(addr)); status == -1) {
         std::cout << "conn find err:" << strerror(errno) << "\n";
     }
     std::cout << duration_cast<microseconds>((system_clock::now() - start)).count() << "us\n";
@@ -77,8 +77,8 @@ void on_read(bufferevent *bev, void *ctx) {
     assert(evbuffer_add_buffer(write, read) == 0);
 }
 
-void on_event(bufferevent *bev, short what, void *ctx) {
-    auto conn = (Connection *)ctx;
+void on_event(bufferevent* bev, short what, void* ctx) {
+    auto conn = (Connection*)ctx;
     INFO("on event {} {}", utils::IPV4(conn->addr_), listener::BevEventToString(what));
     if (what & BEV_EVENT_EOF) { // 关闭连接的事件
         delete conn;
@@ -99,8 +99,8 @@ void runListener(int listener) {
     // 1. 创建一个listen event，持续监听连接事件
     auto listen_event = event_new(
         base, listener, EV_PERSIST | EV_READ,
-        [](evutil_socket_t listener, short flag, void *arg) {
-            auto *base = (event_base *)arg;
+        [](evutil_socket_t listener, short flag, void* arg) {
+            auto* base = (event_base*)arg;
             if ((flag & EV_READ) == 0) {
                 throw std::runtime_error(std::string("illegal event: ") + strerror(errno));
             }
@@ -108,7 +108,7 @@ void runListener(int listener) {
             while (true) {
                 sockaddr_in conn_addr{};
                 socklen_t conn_addr_len = sizeof(conn_addr);
-                auto conn_fd = accept(listener, (sockaddr *)&conn_addr, &conn_addr_len);
+                auto conn_fd = accept(listener, (sockaddr*)&conn_addr, &conn_addr_len);
                 if (conn_fd == -1) {
                     return;
                 }

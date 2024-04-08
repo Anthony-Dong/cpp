@@ -1,6 +1,6 @@
 IndentWidth: 4
 ColumnLimit: 10000
-SortIncludes: Never
+SortIncludes: CaseInsensitive
 AccessModifierOffset: -4
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: AfterColon
@@ -15,5 +15,5 @@ AllowShortLambdasOnASingleLine: None
 AllowShortFunctionsOnASingleLine: None
 AllowShortLoopsOnASingleLine: true
 AlwaysBreakTemplateDeclarations: Yes
-PointerAlignment: Right
+PointerAlignment: Left
 NamespaceIndentation: None

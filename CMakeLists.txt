@@ -29,6 +29,7 @@ include (cmake/cc_test.cmake)
 
 # 三方依赖
 include (third_part/dep.cmake)
+include (third_part/asio.cmake)
 
 # 自己的模块
 add_subdirectory (cpp/io)
@@ -41,5 +42,5 @@ add_subdirectory (test)
 cc_binary (
         NAME main
         SRCS main.cpp
-        DEPS cpp::utils
+        DEPS cpp::utils spdlog
 )

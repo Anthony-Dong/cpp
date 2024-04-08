@@ -20,3 +20,9 @@
 3. `BUILD_INTERFACE`:
    如果是PUBLIC/INTERFACE表示对外如果有人引用当前目标时需要使用这个include，PRIVATE表示仅在构建自身时使用.  [参考](https://zhuanlan.zhihu.com/p/608943736)
 4. `INSTALL_INTERFACE`: 可以是相对路径, 基于 CMAKE_INSTALL_INCLUDEDIR 
+
+## 4. find_package() 问题
+
+
+
+1. 搜索路径: /usr/local/lib/cmake

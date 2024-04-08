@@ -2,8 +2,8 @@
 
 DIR_ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-CC := clang
-CXX := clang++
+CC := gcc
+CXX := g++
 CXX_STANDARD := 17
 C_FLAGS :=
 CXX_FLAGS := -pthread
@@ -24,7 +24,7 @@ init:
 		-DCMAKE_CXX_STANDARD="$(CXX_STANDARD)" \
 		-DABSL_PROPAGATE_CXX_STD=ON \
 		-S . \
-		-B output
+		-B "$(BUILD_DIRECTORY)"
 
 build:
 	cmake --build "$(BUILD_DIRECTORY)" --config "$(BUILD_TYPE)" -j8
