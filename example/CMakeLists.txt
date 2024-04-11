@@ -11,7 +11,7 @@ foreach (main_file IN LISTS main_files)
     cc_binary (
             NAME "${PROJECT_NAME}_${filedir}_${filename}"
             SRCS "${main_file}"
-            DEPS ${THIRD_PART_LIB} cpp::utils
+            DEPS spdlog absl::time fmt::fmt
     )
 endforeach ()
 
@@ -26,7 +26,7 @@ foreach (test_file IN LISTS test_files)
     cc_test (
             NAME "${PROJECT_NAME}_${filedir}_${filename}"
             SRCS "${test_file}"
-            DEPS spdlog absl::time
+            DEPS spdlog absl::time fmt::fmt
     )
 endforeach ()
 
@@ -43,7 +43,7 @@ if (DEFINED CMAKE_CXX_STANDARD AND CMAKE_CXX_STANDARD GREATER_EQUAL 20)
         cc_binary (
                 NAME "${PROJECT_NAME}_${filedir}_${filename}"
                 SRCS "${asio_file}"
-                DEPS asio absl::time spdlog
+                DEPS asio absl::time spdlog fmt::fmt
         )
     endforeach ()
 
@@ -57,7 +57,7 @@ if (DEFINED CMAKE_CXX_STANDARD AND CMAKE_CXX_STANDARD GREATER_EQUAL 20)
         cc_test (
                 NAME "${PROJECT_NAME}_${filedir}_${filename}"
                 SRCS "${asio_file}"
-                DEPS asio absl::time spdlog
+                DEPS asio absl::time spdlog fmt::fmt
         )
     endforeach ()
 endif ()
@@ -75,7 +75,7 @@ if (DEFINED CMAKE_CXX_STANDARD AND CMAKE_CXX_STANDARD GREATER_EQUAL 20)
         cc_binary (
                 NAME "${PROJECT_NAME}_${filedir}_${filename}"
                 SRCS "${cpp20_file}"
-                DEPS absl::time spdlog
+                DEPS absl::time spdlog fmt::fmt
         )
     endforeach ()
 endif ()

@@ -2,12 +2,9 @@
 
 DIR_ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-CC := gcc
-CXX := g++
-CXX_STANDARD := 17
-C_FLAGS :=
-CXX_FLAGS := -pthread
-BUILD_TYPE := Debug
+CC := /usr/bin/clang-14
+CXX := /usr/bin/clang++-14
+BUILD_TYPE := Release
 BUILD_DIRECTORY := output
 
 all: init build
@@ -19,10 +16,6 @@ init:
 		-DCMAKE_INSTALL_PREFIX="$(DIR_ROOT)$(BUILD_DIRECTORY)/install"  \
 		-DCMAKE_C_COMPILER="$(CC)" \
 		-DCMAKE_CXX_COMPILER="$(CXX)" \
-		-DCMAKE_C_FLAGS="$(C_FLAGS)" \
-		-DCMAKE_CXX_FLAGS="$(CXX_FLAGS)" \
-		-DCMAKE_CXX_STANDARD="$(CXX_STANDARD)" \
-		-DABSL_PROPAGATE_CXX_STD=ON \
 		-S . \
 		-B "$(BUILD_DIRECTORY)"
 

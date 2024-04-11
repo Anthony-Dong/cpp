@@ -20,7 +20,9 @@ asio::awaitable<void> echo(tcp::socket socket) {
         char data[1024];
         for (;;) {
             const auto size = co_await socket.async_read_some(asio::buffer(data), asio::use_awaitable);
+            // SPDLOG_INFO("{} {} - read", thread_id(), socket.remote_endpoint());
             co_await async_write(socket, asio::buffer(data, size), asio::use_awaitable);
+            // SPDLOG_INFO("{} {} - write", thread_id(), socket.remote_endpoint());
         }
     } catch (std::exception& e) {
         SPDLOG_INFO("{} {} - echo Exception: {}", thread_id(), socket.remote_endpoint(), e.what());
@@ -66,7 +68,7 @@ asio::awaitable<void> handler_conn(tcp::socket socket) {
 }
 
 asio::awaitable<void> handler_listener(tcp::acceptor& listener) {
-    while (true) {
+    for (;;) {
         auto conn = co_await listener.async_accept(asio::use_awaitable);
         SPDLOG_INFO("{} - receive conn {} -> {}", thread_id(), conn.remote_endpoint(), conn.local_endpoint());
         asio::co_spawn(listener.get_executor(), echo(std::move(conn)), asio::detached);
@@ -75,24 +77,8 @@ asio::awaitable<void> handler_listener(tcp::acceptor& listener) {
 
 int main() {
     asio::io_context ctx;
-
-    asio::signal_set signals(ctx, SIGINT, SIGTERM);
-    signals.async_wait([&](auto, auto) {
-        ctx.stop();
-    });
-
+    std::allocator<void> alloc;
     tcp::acceptor listener(ctx, tcp::endpoint(tcp::v4(), 8080));
     asio::co_spawn(ctx, handler_listener(listener), asio::detached);
-
-    std::vector<std::thread> threads(4);
-
-    for (int x = 0; x < threads.size(); x++) {
-        threads[x] = std::thread([&]() {
-            ctx.run();
-        });
-    }
-
-    for (int x = 0; x < threads.size(); x++) {
-        threads[x].join();
-    }
+    ctx.run();
 }

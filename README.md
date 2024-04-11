@@ -6,7 +6,7 @@ cpp项目，主要是平时学习cpp使用
 
 语言: cpp-17/20
 
-环境: clang-13 / cmake-3.x / Debian10 / Mac
+环境: clang-14(llvm14) / cmake-3.x / Debian10 / Mac
 
 IDE: clion / vscode(clangd)
 

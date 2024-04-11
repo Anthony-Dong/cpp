@@ -40,7 +40,7 @@ awaitable<void> produce_tokens(std::size_t bytes_per_token, steady_timer::durati
 }
 
 awaitable<void> transfer(tcp::socket& from, tcp::socket& to, token_channel& tokens) {
-    std::array<unsigned char, 4096> data;
+    std::array<unsigned char, 4096> data{};
     for (;;) {
         std::size_t bytes_available = co_await tokens.async_receive(use_awaitable);
         while (bytes_available > 0) {
@@ -101,6 +101,6 @@ int main(int argc, char* argv[]) {
         co_spawn(ctx, listen(acceptor, target_endpoint), detached);
         ctx.run();
     } catch (std::exception& e) {
-        std::cerr << "Exception: " << e.what() << "\n";
+        std::cout << "Exception: " << e.what() << "\n";
     }
 }

@@ -1,31 +1,37 @@
+#include "fmt/ostream.h"
+#include "spdlog/spdlog.h"
 #include <functional>
-#include <cassert>
-#include <vector>
 #include <thread>
-#include <fmt/core.h>
+#include <vector>
 
-std::vector<std::thread> tasks{};
+template <>
+struct fmt::formatter<decltype(std::this_thread::get_id())> : fmt::ostream_formatter {};
 
-void test_func(const std::function<void()> &foo) {
-    assert(foo != nullptr);
-    tasks.emplace_back([=]() {
-        foo();
-        fmt::print("end ...\n");
-    });
-}
-
-int main() {
-    using namespace std::chrono_literals;
-    for (int x = 0; x < 10; x++) {
-        auto num = x;
-        test_func([=]() {
-            std::this_thread::sleep_for(10ms);
-            fmt::print("num: {}\n", num);
-        });
+struct multi_thread {
+    explicit multi_thread(const size_t size) : threads_(std::vector<std::thread>(size)) {
     }
-    for (auto &item: tasks) {
-        if (item.joinable()) {
-            item.join();
+
+    ~multi_thread() {
+        for (auto& thread : threads_) {
+            if (thread.joinable()) {
+                thread.join();
+            }
         }
     }
+
+    void run(const std::function<void()>& foo) {
+        for (auto& thread : threads_) {
+            thread = std::move(std::thread(foo));
+        }
+    }
+
+private:
+    std::vector<std::thread> threads_;
+};
+
+int main() {
+    multi_thread multi_thread(5);
+    multi_thread.run([]() {
+        SPDLOG_INFO("{} ... {}", std::this_thread::get_id(), "run");
+    });
 }

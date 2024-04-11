@@ -17,3 +17,4 @@ AllowShortLoopsOnASingleLine: true
 AlwaysBreakTemplateDeclarations: Yes
 PointerAlignment: Left
 NamespaceIndentation: None
+Standard: c++20
