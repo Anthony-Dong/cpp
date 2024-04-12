@@ -17,7 +17,8 @@ struct promise_type_base {
 };
 
 struct promise_type_base_return_void : promise_type_base {
-    void return_void() {}
+    void return_void() {
+    }
 };
 
 template <typename T>
@@ -28,6 +29,7 @@ struct promise_type_base_return_t : promise_type_base {
     T& value() {
         return t;
     }
+
 private:
     T t;
 };
@@ -40,8 +42,11 @@ struct awaitable {
         }
     };
 
-    [[nodiscard]] constexpr bool await_ready() const noexcept {return true;}
-    constexpr void await_suspend(std::coroutine_handle<>) const noexcept {}
+    [[nodiscard]] constexpr bool await_ready() const noexcept {
+        return true;
+    }
+    constexpr void await_suspend(std::coroutine_handle<>) const noexcept {
+    }
 
     [[nodiscard]] T& await_resume() const noexcept {
         return this->handle_.promise().value();

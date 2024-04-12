@@ -1,5 +1,6 @@
 #include "fmt/core.h"
 #include "fmt/ostream.h"
+#include "fmt/chrono.h"
 
 #include "gtest/gtest.h"
 #include <thread>
@@ -23,6 +24,17 @@ struct fmt::formatter<MyStruct> : fmt::formatter<std::string> {
     }
 };
 
+enum class film {
+    house_of_cards = 1,
+    american_beauty = 2,
+    se7en = 7
+};
+
+auto format_as(const film& f) {
+    return fmt::underlying(f);
+}
+
+
 TEST(fmt, fmt_ostream_formatter) {
     fmt::println("thread-id: {}", std::this_thread::get_id());
 }
@@ -30,3 +42,13 @@ TEST(fmt, fmt_ostream_formatter) {
 TEST(fmt, custom_formatter) {
     fmt::println("MyStruct: {}", MyStruct("xiaoli"));
 }
+
+TEST(fmt, enum_formatter) {
+    fmt::println("film: {}", film::american_beauty);
+}
+
+TEST(fmt, chrono) {
+    using namespace std::chrono_literals;
+    fmt::println("cost: {}", 10s);
+}
+
