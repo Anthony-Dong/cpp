@@ -17,7 +17,6 @@ asio::awaitable<void> run() {
 
 int main(int argc, char* argv[]) {
     asio::io_context ctx;
-    auto result =asio::co_spawn(ctx, run(), asio::use_future);
+    asio::co_spawn(ctx, run(), asio::detached);
     ctx.run();
-    auto data =result.get();
 }
