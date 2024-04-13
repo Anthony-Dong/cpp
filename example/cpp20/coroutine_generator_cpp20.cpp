@@ -1,5 +1,3 @@
-#pragma once
-
 #include <coroutine>
 #include <iostream>
 #include <iterator>
