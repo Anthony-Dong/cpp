@@ -2,7 +2,7 @@
 
 ## 介绍
 
-cpp项目，主要是平时学习cpp使用
+cpp 项目，主要是平时学习 cpp 使用
 
 语言: cpp-17/20
 
@@ -33,4 +33,4 @@ IDE: clion / vscode(clangd)
 
 1. [cpp-reference](https://en.cppreference.com/w/)
 
-2. [cpp入门](https://anthony-dong.github.io/2023/04/06/fd8e40efcdb71f2be44fb720dc582d67/)
+2. [cpp 入门](https://anthony-dong.github.io/2023/04/06/fd8e40efcdb71f2be44fb720dc582d67/)

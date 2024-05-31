@@ -3,6 +3,7 @@ project(cpp)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # force stdc++=20
+set(CMAKE_CXX_EXTENSIONS OFF) # 禁止使用GUN特性
 
 # build --cxxopt -std=c++2b
 # build --cxxopt --stdlib=libc++
@@ -56,6 +57,7 @@ add_subdirectory(cpp/io)
 add_subdirectory(cpp/utils)
 add_subdirectory(cpp/network)
 add_subdirectory(cpp/log)
+add_subdirectory(cpp/http)
 add_subdirectory(example)
 add_subdirectory(test)
 

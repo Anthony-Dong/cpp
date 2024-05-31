@@ -1,33 +1,42 @@
 {
   "editor.formatOnSave": true,
   "[cpp]": {
-    "editor.defaultFormatter": "xaver.clang-format"
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
   },
-  "[c]": {
-    "editor.defaultFormatter": "xaver.clang-format" // https://github.com/xaverh/vscode-clang-format
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/.idea": true,
+    "cmake-build-**": true,
   },
   // clangd config: https://github.com/clangd/vscode-clangd
-  // "clangd.path": "/usr/bin/clangd",
+  "clangd.path": "/Users/bytedance/software/clangd_18.1.3/bin/clangd",
   "clangd.arguments": [
-    "--all-scopes-completion",
-    "--completion-style=bundled",
-    "--cross-file-rename",
+    "--completion-style=detailed",
     "--background-index",
-    "--clang-tidy", // enable clang-tidy
-    "-j=4", // workers num: 4
-    "--pch-storage=disk", // Storing PCHs in memory increases memory usages, but may improve performance
+    "--clang-tidy",
+    "--fallback-style=Google",
+    "-j=2",
+    "--pch-storage=disk",
+    "--log=info",
+    "--pretty",
     "--compile-commands-dir=output",
-    "--pretty"
   ],
   // https://github.com/microsoft/vscode-cmake-tools/blob/main/docs/cmake-settings.md
   "cmake.buildArgs": [],
   "cmake.configureArgs": [
     "-DCMAKE_EXPORT_COMPILE_COMMANDS=1", // enable export clangd compile_commands.json
     "-DCMAKE_BUILD_TYPE=Debug", // debug
-    "-DABSL_PROPAGATE_CXX_STD=ON",
-    "-DCMAKE_C_COMPILER=clang", // cc
-    "-DCMAKE_CXX_COMPILER=clang++" // cxx
+    "-DCMAKE_C_COMPILER=/usr/local/opt/llvm@14/bin/clang", // cc
+    "-DCMAKE_CXX_COMPILER=/usr/local/opt/llvm@14/bin/clang++" // cxx
   ],
   "cmake.generator": "Unix Makefiles",
   "cmake.buildDirectory": "${workspaceFolder}/output",
+  "cmake.debugConfig": {
+    "type": "lldb",
+    "request": "launch",
+    "program": "${command:cmake.launchTargetPath}",
+    "args": [],
+    "cwd": "${workspaceFolder}"
+  }
 }
