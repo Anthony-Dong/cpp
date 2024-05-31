@@ -1,16 +1,18 @@
+C/C++ 的构建/编译工具有很多，CMake 应该属于第三代构建工具，其次个人觉得应该是 C++生态领域中最广的，一些新一代的虽好但是生态不行！Cmake-Demo 地址: https://github.com/Anthony-Dong/cpp
+
+<!-- more -->
+
 # 介绍
 
-C/C++ 的构建/编译工具有很多，CMake应该属于第三代构建工具，其次个人觉得应该是C++生态领域中最广的，一些新一代的虽好但是生态不行！
+C/C++ 的构建/编译工具有很多，CMake 应该属于第三代构建工具，其次个人觉得应该是 C++生态领域中最广的，一些新一代的虽好但是生态不行！
 
 第一代：g++/gcc/clang，最原始了，构建便大点的项目非常痛苦
 
-第二代：Makefile，通过Makefile语法规则简化了命令
+第二代：Makefile，通过 Makefile 语法规则简化了命令
 
-第三代：[Autotools](https://www.gnu.org/software/automake/faq/autotools-faq.html) 和 [CMake](https://cmake.org/) 其实就是省略了自己写Makefile的过程！
+第三代：[Autotools](https://www.gnu.org/software/automake/faq/autotools-faq.html) 和 [CMake](https://cmake.org/) 其实就是省略了自己写 Makefile 的过程！
 
-第四代：[Bazel](https://bazel.build/) 、[Blade](https://github.com/chen3feng/blade-build)  集大成者支持任何语言的构建，对于构建缓存支持也好！
-
-**注意**：Bazel生态不太行，但是语法比较现代化，不过可以通过 repo_rule 的方式引入cmake项目，但是缺陷就是需要将cmake项目编译成静态库再依赖！
+第四代：[Bazel](https://bazel.build/) 、[Blade](https://github.com/chen3feng/blade-build) 集大成者支持任何语言的构建，对于构建缓存支持也好！
 
 # 快速开始
 
@@ -35,9 +37,17 @@ cmake_minimum_required(VERSION 3.8.0)
 # 设置项目名称
 project(cmake_demo)
 
-## 设置C++版本 和 编译器
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_COMPILER g++)
+## 设置C++版本
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON) # force stdc++=20
+set(CMAKE_CXX_EXTENSIONS OFF) # 禁止使用GUN特性
+
+## 配置clang
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++ -lc++abi -pthread")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -stdlib=libc++ -lc++abi -pthread")
+endif ()
 
 ## 设置编译选项
 ## add_compile_options(-Wall -Wextra -pedantic -Werror)
@@ -54,13 +64,15 @@ target_link_libraries(${PROJECT_NAME} PUBLIC fmt)
 ```
 
 3. 执行 `cmake .` 即可编译
-4. 备注: fmt库可以前往 fmt 官网自行下载构建 https://fmt.dev/latest/usage.html
+4. 备注: fmt 库可以前往官网自行下载构建 https://fmt.dev/latest/usage.html
 
 # 关键概念
 
+其他注意事项可以看： https://github.com/anthony-dong/cpp/blob/master/doc/cmake_notes.md
+
 ## target
 
-Cmake的所有操作都是围绕着 `target` 走了， `target` 可以是 可执行文件(executable)、静态链接库（static）、动态链接库(shared) !了解了这些你会很方便的理解Camke的编写方式！
+Cmake 的所有操作都是围绕着 `target` 走了， `target` 可以是 可执行文件(executable)、静态链接库（static）、动态链接库(shared) !了解了这些你会很方便的理解 Camke 的编写方式！
 
 ```cmake
 # 定义可执行文件: targe为demo
@@ -73,9 +85,9 @@ add_library(lib_utils SHARED utils.cpp)
 add_library(${PROJECT_NAME} STATIC random.cpp)
 ```
 
-## target_xxx_directories
+备注：INTERFACE 主要是用于那种全部是头文件的构建目标！
 
-我建议申明为 `PRIVATE`，**遵循使用再引用的原则**
+## target_xxx_directories
 
 ```cmake
 # 头文件引用地址
@@ -98,15 +110,15 @@ target_link_directories(${PROJECT_NAME} PRIVATE /usr/local/lib)
 target_link_libraries(${PROJECT_NAME} PUBLIC fmt)
 ```
 
-# 多模块管理 -  本地链接
+# 多模块管理 - 本地链接
 
 一般情况下，如果你是自己本地学习，本地链接是最方便的因为啥了不需要重复编译哇，一次编译处处使用！
 
-这里我大概就自己写了个demo，大家自行参考，地址：https://github.com/Anthony-Dong/cmake_demo
+这里我大概就自己写了个 demo，大家自行参考，地址：https://github.com/Anthony-Dong/cmake_demo
 
-1. 学会用cmake自己安装链接库，这里的例子是protoc
+1. 学会用 cmake 自己安装链接库，这里的例子是 protoc
 
-​	这里其实很简单，首先这些库一般对于cmake都支持，其次就是找到介绍文件，看看它的`CamkeLists.txt` 文件，最后自己看一下哪些需要哪些不需要，最后自己编译即可！具体可以看: https://github.com/Anthony-Dong/cmake_demo
+​ 这里其实很简单，首先这些库一般对于 cmake 都支持，其次就是找到介绍文件，看看它的`CamkeLists.txt` 文件，最后自己看一下哪些需要哪些不需要，最后自己编译即可！具体可以看: https://github.com/Anthony-Dong/cmake_demo
 
 2. 使用 protoc 库
 
@@ -121,9 +133,9 @@ target_link_directories(${PROJECT_NAME} PRIVATE /usr/local/lib)
 target_link_libraries(${PROJECT_NAME} PUBLIC protobuf)
 ```
 
-3. 定义pb文件，使用protobuf可以省去了自己写序列化函数的时间，执行命令  `protoc -I . --cpp_out=. common.proto model.proto`
+3. 定义 pb 文件，使用 protobuf 可以省去了自己写序列化函数的时间，执行命令 `protoc -I . --cpp_out=. common.proto model.proto`
 
-> 注意: protoc版本必须要和链接库版本一致，不然项目编译报错！
+> 注意: protoc 版本必须要和链接库版本一致，不然项目编译报错！
 
 ```protobuf
 //  model.proto
@@ -187,9 +199,9 @@ int main() {
 }
 ```
 
-# 多模块管理 -  FetchContent
+# 多模块管理 - FetchContent
 
-FetchContent 比较现代化吧，比较推荐管理外部模块！
+FetchContent 比较现代化吧，比较推荐管理外部模块！注意很多时候项目并不是一个 camke 项目，那么你需要自己把这个项目包装成一个 cmake 项目，参考这个实现 https://github.com/kingsamchen/asio-cmake/blob/master/CMakeLists.txt ！
 
 1. `CMakeLists.txt`
 
@@ -199,6 +211,8 @@ include (FetchContent)
 if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
     cmake_policy (SET CMP0135 NEW)
 endif ()
+
+set(FETCHCONTENT_TRY_FIND_PACKAGE_MODE NEVER) #强制使用远程模块
 
 FetchContent_Declare (
         spdlog
@@ -222,30 +236,19 @@ int main() {
 }
 ```
 
-# 多模块管理 -  sub_module
+# 多模块管理 - sub_module
 
-`sub_module` 比较现代化，比较推荐管理子模块，很多cmake项目是全局一个cmakelists.txt 文件维护构建信息，导致庞大。sub_module 可以添加子模块的方式去解决！具体可以参考这个项目: [https://github.com/Anthony-Dong/cpp](https://github.com/Anthony-Dong/cpp/)
-
-`add_subdirectory`  仅需要模块目录定义 `CMakeLists.txt` 文件即可！
+`sub_module` 比较好的是可以将一个项目拆分成多个子模块方便管理，不然一个 `CMakeList.txt` 文件管理整个项目复杂度会高一些！具体可以参考这个项目: [https://github.com/Anthony-Dong/cpp](https://github.com/Anthony-Dong/cpp/)
 
 1. `CMakeLists.txt`
 
 ```cmake
 cmake_minimum_required (VERSION 3.11)
 
-include (cmake/cc_library.cmake)
-include (cmake/cc_binary.cmake)
-include (cmake/cc_test.cmake)
-
-add_subdirectory (cpp/io)
-add_subdirectory (cpp/utils)
-add_subdirectory (cpp/network)
-add_subdirectory (cpp/log)
-add_subdirectory (example)
-add_subdirectory (test)
+add_subdirectory (cpp/io) # 引入子模块
 ```
 
-2. `cpp/io/CMakeLists.txt`
+2. `cpp/io/CMakeLists.txt` 模块内部自己再管理构建目标
 
 ```cmake
 cc_library (
@@ -263,67 +266,72 @@ cc_test (
 )
 ```
 
-# 远程调试
+# vscode + cmake 开发环境
 
-远程调试的能力依赖于gdbserver，其次 cmake构建的时候需要指定 `-DCMAKE_BUILD_TYPE=Debug`
+我个人感觉 vscode 开发起来比较舒服，可能是我电脑垃圾带不动 clion！
 
-> Debug：用于在没有优化的情况下，使用带有调试符号构建库或者可执行文件
+vscode + clangd(代码提示还是很不错的) 环境非常的简单，只需要下载几个插件
 
-```shell
-~/go/src/github.com/anthony-dong/cmake_demo gdbserver :10086 output/cmake_demo
-Process output/cmake_demo created; pid = 149849
-Listening on port 10086
-Remote debugging from host 10.78.117.128
-now 2023-08-18 17:28:22
-hello world!
+1. clangd https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.vscode-clangd
+2. codelldb: https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb
+3. cmake tools: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
+4. cmake: https://marketplace.visualstudio.com/items?itemName=twxs.cmake
+5. `.vscode/settings.json` 配置
+
+```json
+{
+  // 开启save后自动format
+  "editor.formatOnSave": true,
+
+  // 配置 defaultFormatter 为 clangd
+  "[cpp]": {
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+  },
+
+  // clangd 配置
+  // clangd config: https://github.com/clangd/vscode-clangd
+  "clangd.path": "/Users/bytedance/software/clangd_18.1.3/bin/clangd", // 推荐选择最新的clangd下载, 前往这里下载 https://github.com/clangd/clangd/releases
+  "clangd.arguments": [
+    "--completion-style=detailed", // 更加详细的信息吧，不希望的可以配置bundled
+    "--background-index",
+    "--fallback-style=Google", // 根据自己需求，或者项目下配置 .clang-format 文件
+    "--clang-tidy",
+    "-j=2",
+    "--pch-storage=disk", // 降低内存开销，能降低2/3左右的内存
+    "--log=error",
+    "--pretty",
+    "--compile-commands-dir=output"
+  ],
+
+  // cmake 配置
+  // https://github.com/microsoft/vscode-cmake-tools/blob/main/docs/cmake-settings.md
+  "cmake.buildArgs": [],
+  "cmake.configureArgs": [
+    "-DCMAKE_EXPORT_COMPILE_COMMANDS=1", // 注意(必须开启): enable export clangd compile_commands.json
+    "-DCMAKE_BUILD_TYPE=Debug", // debug
+    "-DCMAKE_C_COMPILER=/usr/local/opt/llvm@14/bin/clang", // cc
+    "-DCMAKE_CXX_COMPILER=/usr/local/opt/llvm@14/bin/clang++" // cxx
+  ],
+  "cmake.generator": "Unix Makefiles",
+  "cmake.buildDirectory": "${workspaceFolder}/output",
+  "cmake.debugConfig": {
+    // debug使用lldb
+    "type": "lldb",
+    "request": "launch",
+    "program": "${command:cmake.launchTargetPath}",
+    "args": [],
+    "cwd": "${workspaceFolder}"
+  }
+}
 ```
 
-![image-20230818173037509](https://tyut.oss-accelerate.aliyuncs.com/image/2023/8-18/c05a4e0255fd4e4891cfc062c73266c1.png)2. 效果
+6. 选择构建目标
 
-![image-20230818173057174](https://tyut.oss-accelerate.aliyuncs.com/image/2023/8-18/d7a1664672114e47acc4b8040be97638.png)
+![img](https://tyut.oss-accelerate.aliyuncs.com/image/2024/5-30/301dc74b063b4f1296eb48215126752c.gif)
 
-# cmake 构建命令
+7. 运行构建目标
 
-Makefile 中定义了 `build` 和   `test`指令，也是cmake中场景的命令
-
-```makefile
-.PHONY: all init build test clean
-
-DIR_ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-
-CC := clang
-CXX := clang++
-CXX_STANDARD := 17
-C_FLAGS :=
-CXX_FLAGS := -pthread
-BUILD_TYPE := Debug
-BUILD_DIRECTORY := output
-
-all: build
-
-init:
-	mkdir -p "$(BUILD_DIRECTORY)"
-	mkdir -p "$(BUILD_DIRECTORY)/install"
-	cmake --log-level=DEBUG -G "Unix Makefiles" -DCMAKE_BUILD_TYPE="$(BUILD_TYPE)" \
-		-DCMAKE_INSTALL_PREFIX="$(DIR_ROOT)$(BUILD_DIRECTORY)/install"  \
-		-DCMAKE_C_COMPILER="$(CC)" \
-		-DCMAKE_CXX_COMPILER="$(CXX)" \
-		-DCMAKE_C_FLAGS="$(C_FLAGS)" \
-		-DCMAKE_CXX_FLAGS="$(CXX_FLAGS)" \
-		-DCMAKE_CXX_STANDARD="$(CXX_STANDARD)" \
-		-DABSL_PROPAGATE_CXX_STD=ON \
-		-S . \
-		-B "$(BUILD_DIRECTORY)"
-
-build: init
-	cmake --build "$(BUILD_DIRECTORY)" --config "$(BUILD_TYPE)" -j8
-
-test:
-	cd "$(BUILD_DIRECTORY)" && ctest --config "$(BUILD_TYPE)" --tests-regex '_test' -j8
-
-clean:
-	rm -rf "$(BUILD_DIRECTORY)"
-```
+![img](https://tyut.oss-accelerate.aliyuncs.com/image/2024/5-30/6bd43160a9734e12b43f31ac3777a289.gif)
 
 # Bazel
 

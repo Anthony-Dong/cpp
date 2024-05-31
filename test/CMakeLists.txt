@@ -27,3 +27,9 @@ cc_binary (
         SRCS network/client_main.cpp
         DEPS cpp::network cpp::log
 )
+
+cc_test(
+     NAME llhttp_test
+     SRCS llhttp/llhttp_test.cpp
+     DEPS asio absl::strings spdlog cpp::http
+)

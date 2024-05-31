@@ -51,3 +51,50 @@ TEST(variant, multi_init) {
         SPDLOG_INFO("after index(1)={}", *str);
     }
 }
+
+TEST(variant, multi_init_get) {
+    std::string data = "111";
+    std::variant<std::string, std::reference_wrapper<std::string>> union_vars{
+        std::in_place_index<1>,
+        data,
+    };
+    if (union_vars.index() == 1) {
+        auto& str = std::get<1>(union_vars).get();
+        SPDLOG_INFO("index = 1, value = {}", str);
+        str = "222";
+    }
+
+    SPDLOG_INFO("data = {}", data);
+}
+
+TEST(variant, reference) {
+    std::string data = "111";
+    std::variant<std::string, std::reference_wrapper<std::string>> union_vars{
+        std::in_place_index<1>,
+        data,
+    };
+    auto& str = std::get<1>(union_vars).get();
+    str = "222";
+
+    SPDLOG_INFO("data = {}", data);
+}
+
+TEST(variant, default_) {
+    std::variant<std::string, std::string> union_vars{
+        std::in_place_index<1>,
+        "111",
+    };
+    SPDLOG_INFO("before = {}", std::get<1>(union_vars));
+    std::get<1>(union_vars) = "222";
+    SPDLOG_INFO("after = {}", std::get<1>(union_vars));
+}
+
+
+TEST(variant, const_) {
+    const std::variant<std::string, std::string> union_vars{
+        std::in_place_index<1>,
+        "111",
+    };
+    SPDLOG_INFO("before = {}", std::get<1>(union_vars));
+    // std::get<1>(union_vars) = "222";
+}

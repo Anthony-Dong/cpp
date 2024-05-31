@@ -11,6 +11,9 @@ int fast_run(AsyncFunc foo) {
         io_context.run();
     } catch (const std::exception& err) {
         SPDLOG_INFO("find err: {}", err.what());
+    } catch (...) {
+        SPDLOG_INFO("系统异常");
+        throw;
     }
 }
 
@@ -39,6 +42,40 @@ asio::awaitable<void> timeout() {
             co_return;
         }
         SPDLOG_INFO("async_wait end");
+    }
+}
+
+asio::awaitable<void> throw_exception() {
+    SPDLOG_INFO("throw_exception start");
+    throw std::logic_error("throw_exception");
+}
+
+asio::awaitable<void> invoke_throw_exception() {
+    SPDLOG_INFO("invoke_throw_exception start");
+    co_await throw_exception();
+
+    SPDLOG_INFO("invoke_throw_exception end");
+}
+
+asio::awaitable<void> invoke_invoke_throw_exception() {
+    SPDLOG_INFO("invoke_invoke_throw_exception start");
+    try {
+        co_await invoke_throw_exception();
+    } catch (...) {
+        SPDLOG_INFO("系统异常");
+    }
+    SPDLOG_INFO("invoke_invoke_throw_exception end");
+}
+
+int main() {
+    try {
+        asio::io_context io_context;
+        asio::co_spawn(io_context, invoke_invoke_throw_exception(), asio::detached);
+        io_context.run();
+    } catch (const std::exception& err) {
+        SPDLOG_INFO("find err: {}", err.what());
+    } catch (...) {
+        SPDLOG_INFO("系统异常");
     }
 }
 

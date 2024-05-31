@@ -46,6 +46,16 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 
+set(BENCHMARK_ENABLE_GTEST_TESTS OFF)
+set(BENCHMARK_USE_BUNDLED_GTEST OFF)
+set(BENCHMARK_INSTALL_DOCS OFF)
+set(BENCHMARK_ENABLE_INSTALL OFF)
+FetchContent_Declare(
+        googlebenchmark
+        GIT_REPOSITORY https://github.com/google/benchmark.git
+        GIT_TAG v1.8.3
+)
+
 set(ABSL_PROPAGATE_CXX_STD ON)
 FetchContent_Declare(
         absl
@@ -53,7 +63,7 @@ FetchContent_Declare(
 )
 
 
-FetchContent_MakeAvailable(fmt spdlog googletest absl  libevent)
+FetchContent_MakeAvailable(fmt spdlog googletest googlebenchmark absl libevent)
 
 set(absl_LIBRARIES
         absl::algorithm
@@ -75,3 +85,13 @@ set(TEST_LIB "GTest::gtest_main")
 
 set(THIRD_PART_LIB fmt spdlog ${absl_LIBRARIES})
 message("THIRD_PART_LIB: ${THIRD_PART_LIB}")
+
+FetchContent_Declare(
+        llhttp
+        URL "https://github.com/nodejs/llhttp/archive/refs/tags/release/v9.2.1.tar.gz"
+)
+
+set(BUILD_SHARED_LIBS OFF CACHE INTERNAL "")
+set(BUILD_STATIC_LIBS ON CACHE INTERNAL "")
+FetchContent_MakeAvailable(llhttp)
+# llhttp_static

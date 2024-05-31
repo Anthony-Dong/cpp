@@ -79,3 +79,18 @@ if (DEFINED CMAKE_CXX_STANDARD AND CMAKE_CXX_STANDARD GREATER_EQUAL 20)
         )
     endforeach ()
 endif ()
+
+
+file (
+        GLOB_RECURSE benchmark_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/*/*_benchmark.cpp"
+)
+foreach (benchmark_file IN LISTS benchmark_files)
+    get_filename_component (filename ${benchmark_file} NAME_WE)
+    get_filename_component (filedir ${benchmark_file} DIRECTORY)
+    cc_binary (
+            NAME "${PROJECT_NAME}_${filedir}_${filename}"
+            SRCS "${benchmark_file}"
+            DEPS absl::time spdlog fmt::fmt benchmark::benchmark
+    )
+endforeach ()

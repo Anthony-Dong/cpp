@@ -2,11 +2,19 @@
 #include "asio/experimental/coro.hpp"
 #include "spdlog/spdlog.h"
 
+
+
+asio::awaitable<std::string> thorw_error()  {
+    throw std::error_code(1, asio::system_category());
+}
+
 asio::awaitable<std::string> read_data() {
-    const auto executor = co_await asio::this_coro::executor;
-    asio::system_timer timer(executor, std::chrono::seconds(1));
-    co_await timer.async_wait(asio::use_awaitable);
-    co_return "hello world";
+    try {
+        co_await thorw_error();
+    } catch (std::error_code& err) {
+        SPDLOG_INFO("err: {}",err.message());
+    }
+    SPDLOG_INFO("hello workd");
 }
 
 asio::awaitable<void> run() {
