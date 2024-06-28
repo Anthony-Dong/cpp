@@ -1,5 +1,5 @@
-#include "gtest/gtest.h"
 #include "fmt/core.h"
+#include "gtest/gtest.h"
 
 struct MyTest {
     int age;

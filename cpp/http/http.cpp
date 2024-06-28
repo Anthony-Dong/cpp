@@ -130,18 +130,10 @@ async<void> handle_http_conn(socket_ptr socket, const http_handle_func& http_han
             response.reset();
             request_parser->reset(&request);
         }
-    } catch (const parser::parser_exception& err) {
-        SPDLOG_INFO("{} HTTP解析异常: {}", conn->remote(), err.what());
-    } catch (const http_exception& err) {
-        SPDLOG_INFO("HTTP异常: {}", err.what());
-    } catch (const io::io_exception& err) {
-        SPDLOG_INFO("IO异常: {}", err.what());
     } catch (const std::exception& err) {
-        SPDLOG_INFO("系统异常: {}", err.what());
+        SPDLOG_INFO("{} HTTP异常: {}", conn->remote(), err.what());
     } catch (...) {
         SPDLOG_INFO("未知异常");
-        socket->close();
-        throw;
     }
     socket->close();
 }

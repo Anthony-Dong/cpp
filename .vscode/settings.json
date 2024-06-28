@@ -38,5 +38,6 @@
     "program": "${command:cmake.launchTargetPath}",
     "args": [],
     "cwd": "${workspaceFolder}"
-  }
+  },
+  "cmake.autoSelectActiveFolder": false
 }

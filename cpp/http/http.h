@@ -2,7 +2,9 @@
 
 #include "io.h"
 #include "parser.h"
+#include "spdlog/spdlog.h"
 #include "utils.h"
+#include <exception>
 #include <string>
 #include <utility>
 #include <vector>
@@ -178,9 +180,14 @@ asio::awaitable<void> handle_http_conn(socket_ptr socket, const http_handle_func
 
 inline asio::awaitable<void> handler_listener(asio::ip::tcp::acceptor& listener, const http_handle_func& http_handler) {
     for (;;) {
-        auto conn = co_await listener.async_accept(asio::use_awaitable);
-        asio::co_spawn(listener.get_executor(), utils::handle_http_conn(std::make_shared<socket>(std::move(conn)), http_handler), asio::detached);
-        // todo fix 这里没有捕获到异常...
+        try {
+            auto conn = co_await listener.async_accept(asio::use_awaitable);
+            asio::co_spawn(listener.get_executor(), utils::handle_http_conn(std::make_shared<socket>(std::move(conn)), http_handler), asio::detached);
+        } catch (const std::exception& err) {
+            SPDLOG_INFO("accept conn find err: {}", err.what());
+        } catch (...) {
+            SPDLOG_INFO("accept conn find err: {}", "未知异常");
+        }
     }
 }
 
