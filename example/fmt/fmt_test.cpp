@@ -1,8 +1,7 @@
-#include "fmt/core.h"
-#include "fmt/ostream.h"
-#include "fmt/chrono.h"
+#include <fmt/core.h>
+#include <fmt/ostream.h>
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include <thread>
 
 template <>
@@ -17,13 +16,6 @@ private:
     std::string name;
 };
 
-template <>
-struct fmt::formatter<MyStruct> : fmt::formatter<std::string> {
-    auto format(const MyStruct& value, auto& ctx) {
-        return fmt::format_to(ctx.out(), "MyStruct(name={})", value.name);
-    }
-};
-
 enum class film {
     house_of_cards = 1,
     american_beauty = 2,
@@ -34,13 +26,20 @@ auto format_as(const film& f) {
     return fmt::underlying(f);
 }
 
-
 TEST(fmt, fmt_ostream_formatter) {
     fmt::println("thread-id: {}", std::this_thread::get_id());
 }
 
+template <>
+struct fmt::formatter<MyStruct> : fmt::formatter<std::string> {
+    auto format(const MyStruct& value, auto& ctx) const {
+        return fmt::format_to(ctx.out(), "MyStruct(name={})", value.name);
+    }
+};
+
 TEST(fmt, custom_formatter) {
-    fmt::println("MyStruct: {}", MyStruct("xiaoli"));
+    MyStruct data("xiaoli");
+    fmt::println("MyStruct: {}", data);
 }
 
 TEST(fmt, enum_formatter) {
@@ -51,4 +50,3 @@ TEST(fmt, chrono) {
     using namespace std::chrono_literals;
     fmt::println("cost: {}", 10s);
 }
-

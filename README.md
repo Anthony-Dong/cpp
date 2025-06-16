@@ -4,11 +4,11 @@
 
 cpp 项目，主要是平时学习 cpp 使用
 
-语言: cpp-17/20
+版本: cpp-20
 
-环境: clang-14(llvm14) / cmake-3.x / Debian10 / Mac
+环境: clang-15 、 cmake 、 vcpkg 
 
-IDE: clion / vscode(clangd)
+IDE: clion / vscode
 
 ## 目录结构
 
@@ -22,7 +22,6 @@ IDE: clion / vscode(clangd)
 ├── doc # 平时写的笔记和文档
 ├── example # 自己平时练习的代码
 ├── test # 轮子的测试代码
-└── third_part # 三方依赖，可能自己会调试+注释一些代码
 ```
 
 ## [文章](./doc)

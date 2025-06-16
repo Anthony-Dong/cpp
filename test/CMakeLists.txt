@@ -7,7 +7,7 @@ cc_test (
 cc_test (
         NAME utils_time_test
         SRCS utils/time_test.cpp
-        DEPS cpp::utils fmt
+        DEPS cpp::utils ${lib_fmt}
 )
 
 cc_binary (
@@ -31,5 +31,5 @@ cc_binary (
 cc_test(
      NAME llhttp_test
      SRCS llhttp/llhttp_test.cpp
-     DEPS asio absl::strings spdlog cpp::http
+     DEPS ${lib_asio} ${lib_absl} ${lib_spdlog} cpp::http
 )

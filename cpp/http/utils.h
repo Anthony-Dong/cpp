@@ -8,10 +8,10 @@ namespace cpp::http::utils {
 
 template <typename T>
 concept is_reader_t = requires(T* t) {
-                          requires requires(char* buffer, const size_t buffer_size) {
-                                       { t->read_some(buffer, buffer_size) } -> std::same_as<async<size_t>>;
-                                   };
-                      };
+    requires requires(char* buffer, const size_t buffer_size) {
+        { t->read_some(buffer, buffer_size) } -> std::same_as<async<size_t>>;
+    };
+};
 
 template <is_reader_t T>
 async<void> read_all(T* reader, std::string& output) {

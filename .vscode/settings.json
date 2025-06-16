@@ -10,33 +10,26 @@
     "cmake-build-**": true,
   },
   // clangd config: https://github.com/clangd/vscode-clangd
-  "clangd.path": "/Users/bytedance/software/clangd_18.1.3/bin/clangd",
   "clangd.arguments": [
     "--completion-style=detailed",
     "--background-index",
     "--clang-tidy",
     "--fallback-style=Google",
-    "-j=2",
+    "-j=8",
     "--pch-storage=disk",
-    "--log=info",
     "--pretty",
     "--compile-commands-dir=output",
   ],
   // https://github.com/microsoft/vscode-cmake-tools/blob/main/docs/cmake-settings.md
-  "cmake.buildArgs": [],
-  "cmake.configureArgs": [
-    "-DCMAKE_EXPORT_COMPILE_COMMANDS=1", // enable export clangd compile_commands.json
-    "-DCMAKE_BUILD_TYPE=Debug", // debug
-    "-DCMAKE_C_COMPILER=/usr/local/opt/llvm@14/bin/clang", // cc
-    "-DCMAKE_CXX_COMPILER=/usr/local/opt/llvm@14/bin/clang++" // cxx
-  ],
-  "cmake.generator": "Unix Makefiles",
-  "cmake.buildDirectory": "${workspaceFolder}/output",
   "cmake.debugConfig": {
     "type": "lldb",
     "request": "launch",
     "program": "${command:cmake.launchTargetPath}",
     "args": [],
     "cwd": "${workspaceFolder}"
-  }
+  },
+  "cmake.configureArgs": [],
+  "cmake.configureSettings": {
+    "CMAKE_TOOLCHAIN_FILE": "/Users/bytedance/go/src/github.com/microsoft/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  },
 }

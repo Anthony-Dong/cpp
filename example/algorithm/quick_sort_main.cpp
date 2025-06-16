@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <ranges>
+#include <algorithm>
 
 template <typename T, template <typename...> class Array>
 void swap(Array<T>& arr, typename Array<T>::size_type i, typename Array<T>::size_type j) {
@@ -52,5 +54,5 @@ int quick_sort_helper(Array<T>& arr, typename Array<T>::size_type left, typename
 int main() {
     std::vector<int> arr = {5, 3, 4, 2, 1, 6, 7, 11, -1, -5, 20, 1};
     quick_sort(arr, 0, std::vector<int>::size_type(arr.size() - 1));
-    //    std::cout << quick_sort_helper(arr, 0, arr.size() - 1) << std::endl;
+    std::for_each(arr.begin(), arr.end(), [](const int i) { std::cout << i << " "; });
 }

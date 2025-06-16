@@ -1,6 +1,6 @@
 # Bazel Rule
 
-bazel的规则定义语法实际上非常优与cmake，cmake会显得非常的丑陋且非常臃肿，因此很多开源项目都封装了cmake rule，方便进行依赖管理.
+bazel 的规则定义语法实际上非常优与 cmake，cmake 会显得非常的丑陋且非常臃肿，因此很多开源项目都封装了 cmake rule，方便进行依赖管理.
 
 # 快速开始
 
@@ -10,8 +10,8 @@ include (cmake/cc_library.cmake)
 include (cmake/cc_binary.cmake)
 include (cmake/cc_test.cmake)
 
-# 设置项目根路径为include dir
-list (APPEND CPP_COMMON_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
+# 设置项目src路径，方便项目下别的文件include
+list (APPEND CUSTOM_PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 ```
 
 # cc_library
@@ -98,6 +98,18 @@ cc_test(
 > https://google.github.io/googletest/quickstart-cmake.html
 
 ```cmake
+# 1. 源码依赖
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+# 2. 本地依赖
+find_package(GTest REQUIRED)
+
 cc_test (
         NAME utils_time_test
         SRCS utils/time_test.cpp
@@ -107,4 +119,4 @@ cc_test (
 
 # TODO
 
-1. 生成`pkgconfig`文件
+- 生成`pkgconfig`文件

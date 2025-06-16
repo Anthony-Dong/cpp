@@ -1,17 +1,17 @@
 #pragma once
 
-#include <string>
-#include <mutex>
 #include "cpp/utils/class.h"
+#include <mutex>
+#include <string>
 
 namespace cpp::io {
 
 struct ReadWriter {
     virtual ~ReadWriter() = default;
 
-    virtual size_t read(std::string &buffer) = 0;
+    virtual size_t read(std::string& buffer) = 0;
 
-    virtual size_t write(const std::string &buffer) = 0;
+    virtual size_t write(const std::string& buffer) = 0;
 };
 
 struct FileReadWriter : ReadWriter {
@@ -21,9 +21,9 @@ struct FileReadWriter : ReadWriter {
 
     DeleteCopyConstructor(FileReadWriter);
 
-    size_t read(std::string &buffer) override;
+    size_t read(std::string& buffer) override;
 
-    size_t write(const std::string &buffer) override;
+    size_t write(const std::string& buffer) override;
 
 private:
     enum Mode {

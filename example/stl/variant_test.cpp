@@ -98,3 +98,7 @@ TEST(variant, const_) {
     SPDLOG_INFO("before = {}", std::get<1>(union_vars));
     // std::get<1>(union_vars) = "222";
 }
+
+TEST(variant, structs) {
+    std::variant<std::string, std::string> union_vars{};
+}

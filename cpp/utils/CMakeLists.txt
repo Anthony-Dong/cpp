@@ -1,4 +1,4 @@
-cc_library (
+cc_library(
         NAME utils
         ALIAS cpp::utils
         SRCS base64.cpp

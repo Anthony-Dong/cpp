@@ -38,6 +38,7 @@ Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
    1. `wget https://apt.llvm.org/llvm.sh`
    2. `chmod +x llvm.sh`
    3. `sudo ./llvm.sh 14`
+   4. `sudo -E ./llvm.sh 14`  (如果你使用和HTTP代理)
 4. install libc++ 14
    1. `sudo apt-get install -y libc++abi-14-dev libc++-14-dev`
 5. cc/cxx

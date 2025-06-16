@@ -16,7 +16,7 @@ asio::awaitable<std::string> create_task(std::chrono::duration<Rep, Period> spen
 asio::awaitable<void> select_one_task() {
     using namespace asio::experimental::awaitable_operators;
     using namespace std::chrono_literals;
-    const auto result = co_await (create_task(1s, "task1") || create_task(2s, "task2") || create_task(3s, "task3") );
+    const auto result = co_await (create_task(1s, "task1") || create_task(2s, "task2") || create_task(3s, "task3"));
     if (const auto name = std::get_if<0>(&result); name != nullptr) {
         SPDLOG_INFO("select task0 - {}", *name);
     }
@@ -28,7 +28,7 @@ asio::awaitable<void> select_one_task() {
 asio::awaitable<void> select_one_task_2() {
     using namespace asio::experimental::awaitable_operators;
     using namespace std::chrono_literals;
-    const auto result = co_await (create_task(3s, "task1") || create_task(2s, "task2") || create_task(3s, "task3") );
+    const auto result = co_await (create_task(3s, "task1") || create_task(2s, "task2") || create_task(3s, "task3"));
 
     if (result.index() == 0) {
         SPDLOG_INFO("select task-0 - {}", "task1");
@@ -40,8 +40,6 @@ asio::awaitable<void> select_one_task_2() {
         SPDLOG_INFO("select task-2 - {}", "task3");
     }
 }
-
-
 
 asio::awaitable<void> wait_group() {
     using namespace asio::experimental::awaitable_operators;
@@ -55,4 +53,3 @@ int main(int argc, char* argv[]) {
     asio::co_spawn(context, select_one_task_2(), asio::detached);
     context.run();
 }
-

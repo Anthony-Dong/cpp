@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "dependencies": [
+    "abseil",
+    "benchmark",
+    "fmt",
+    "gtest",
+    "libevent",
+    "llhttp",
+    "spdlog",
+    "ms-gsl",
+    "asio",
+    "protobuf"
+  ],
+  "name": "cpp",
+  "version": "1.0.0"
+}

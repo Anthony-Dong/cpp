@@ -13,7 +13,7 @@ std::string thread_id() {
 
 template <typename T>
 struct fmt::formatter<asio::ip::basic_endpoint<T>> : fmt::formatter<std::string_view> {
-    auto format(const asio::ip::basic_endpoint<T>& endpoint, fmt::format_context& ctx) {
+    auto format(const asio::ip::basic_endpoint<T>& endpoint, fmt::format_context& ctx) const {
         return fmt::format_to(ctx.out(), "[{}]:{}", endpoint.address().to_string(), endpoint.port());
     }
 };

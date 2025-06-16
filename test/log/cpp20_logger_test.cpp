@@ -9,7 +9,7 @@ struct MyTest {
 template <> // 特化模版 fmt::formatter<T>
 struct fmt::formatter<MyTest> : fmt::formatter<char> {
     template <typename Context>
-    auto format(const MyTest& data, Context& ctx) {
+    auto format(const MyTest& data, Context& ctx) const {
         return fmt::format_to(ctx.out(), "name: {}. age: {}", data.name, data.age);
     }
 };

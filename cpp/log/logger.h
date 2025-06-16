@@ -1,12 +1,12 @@
 #pragma once
 
+#include "absl/time/clock.h"
+#include "absl/time/time.h"
 #include "fmt/core.h"
+#include <chrono>
 #include <cmath>
 #include <string>
-#include <chrono>
 #include <unordered_map>
-#include "absl/time/time.h"
-#include "absl/time/clock.h"
 
 namespace cpp::log {
 enum class Level {

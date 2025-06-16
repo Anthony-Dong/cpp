@@ -18,7 +18,7 @@ struct fmt::formatter<ParseNop> {
 template <>
 struct fmt::formatter<Test> : fmt::formatter<ParseNop> {
     template <typename Context>
-    auto format(const Test& data, Context& ctx) {
+    auto format(const Test& data, Context& ctx) const {
         return fmt::format_to(ctx.out(), "name: {}. age: {}", data.name, data.age);
     }
 };

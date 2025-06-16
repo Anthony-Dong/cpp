@@ -1,4 +1,4 @@
-cc_library (
+cc_library(
         NAME cpp_io
         ALIAS cpp::io
         SRCS io.cpp
@@ -6,7 +6,7 @@ cc_library (
         DEPS cpp::utils
 )
 
-cc_test (
+cc_test(
         NAME cpp_io_test
         SRCS io_test.cpp
         DEPS cpp::io

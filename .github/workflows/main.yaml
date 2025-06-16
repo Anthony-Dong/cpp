@@ -23,16 +23,18 @@ jobs:
       - name: Install LLVM and Clang
         uses: KyleMayes/install-llvm-action@v2
         with:
-          version: "14.0"
+          version: "15.0"
 
       - name: Clang Info
         working-directory: ${{github.workspace}}
         run: clang++ --version && clang --version
-
+      - name: Install Vcpkg
+        working-directory: ${{github.workspace}}
+        run: git clone github.com/microsoft/vcpkg --depth 1
       - name: Build
         working-directory: ${{github.workspace}}
         # Build your program with the given configuration
-        run: make CC=clang CXX=clang++ BUILD_TYPE=${{env.BUILD_TYPE}} BUILD_DIRECTORY=${{github.workspace}}/output
+        run: make CC=clang CXX=clang++ VCPKG_HOME=${{github.workspace}}/vcpkg BUILD_TYPE=${{env.BUILD_TYPE}} BUILD_DIRECTORY=${{github.workspace}}/output
 
       - name: Run
         working-directory: ${{github.workspace}}/output

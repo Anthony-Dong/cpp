@@ -1,7 +1,6 @@
-#
-cc_library (
+cc_library(
         NAME cpp_log
         ALIAS cpp::log cpp::utils
         HDRS logger.h
-        DEPS fmt absl::time
+        DEPS ${lib_fmt} ${lib_absl}
 )

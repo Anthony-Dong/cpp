@@ -12,7 +12,7 @@ std::string thread_id() {
 
 template <typename T>
 struct fmt::formatter<asio::ip::basic_endpoint<T>> : fmt::formatter<std::string_view> {
-    auto format(const asio::ip::basic_endpoint<T>& endpoint, fmt::format_context& ctx) {
+    auto format(const asio::ip::basic_endpoint<T>& endpoint, fmt::format_context& ctx) const {
         return fmt::format_to(ctx.out(), "[{}]:{}", endpoint.address().to_string(), endpoint.port());
     }
 };
@@ -23,7 +23,7 @@ asio::awaitable<void> echo(std::shared_ptr<tcp::socket> socket) {
         for (;;) {
             const auto size = co_await socket->async_read_some(asio::buffer(data), asio::use_awaitable);
             // SPDLOG_INFO("{} {} - read", thread_id(), socket.remote_endpoint());
-            co_await socket->async_send( asio::buffer(data, size), asio::use_awaitable);
+            co_await socket->async_send(asio::buffer(data, size), asio::use_awaitable);
             // SPDLOG_INFO("{} {} - write", thread_id(), socket.remote_endpoint());
         }
     } catch (std::exception& e) {

@@ -6,7 +6,7 @@
 
 template <>
 struct fmt::formatter<asio::ip::tcp::endpoint> : fmt::formatter<std::string_view> {
-    static auto format(const asio::ip::tcp::endpoint& endpoint, fmt::format_context& ctx) {
+     static auto format(const asio::ip::tcp::endpoint& endpoint, fmt::format_context& ctx)  {
         return fmt::format_to(ctx.out(), "[{}]:{}", endpoint.address().to_string(), endpoint.port());
     }
 };

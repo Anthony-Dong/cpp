@@ -23,6 +23,7 @@ int test_co_return() {
                    }));
     io_context.run();
     SPDLOG_INFO("{}", "end");
+    return 0;
 }
 
 asio::awaitable<std::string> task1() {
@@ -42,15 +43,15 @@ asio::awaitable<std::string> task2() {
 asio::awaitable<void> task() {
     using namespace asio::experimental::awaitable_operators;
     auto result = co_await (task1() || task2());
-    if (auto name= std::get_if<0>(&result); name){
+    if (auto name = std::get_if<0>(&result); name) {
         SPDLOG_INFO("result: {}", *name);
     }
-    if (auto name= std::get_if<1>(&result); name){
+    if (auto name = std::get_if<1>(&result); name) {
         SPDLOG_INFO("result: {}", *name);
     }
 }
 
-int test_co_group() {
+void test_co_group() {
     asio::io_context io_context(1);
     asio::co_spawn(io_context, task(), asio::detached);
     io_context.run();
